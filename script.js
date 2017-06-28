@@ -89,7 +89,7 @@ function newShape() {
                 37: 'left',
                 39: 'right',
                 40: 'down',
-                // 38: 'rotate'
+                38: 'rotate'
             };
 
             keyPress(keys[e.keyCode]);
@@ -113,19 +113,38 @@ function newShape() {
                         ++positionY;
                     // }
                     break;
+                case 'rotate':
+                    let rotated = rotate(currentShape);
+                    if (checkPosition(0, 0, rotated)) {
+                        currentShape = rotated;
+                    }
+                    break;
             }
         }
 
-        function checkPosition(offsetX, offsetY) {
+        function rotate(currentShape) {
+            let newCurrentShape = [];
+            for (let y = 0; y < 4; ++y) {
+                newCurrentShape[y] = [];
+                for (let x = 0; x < 4; ++x) {
+                    newCurrentShape[y][x] = currentShape[3 - x][y];
+                }
+            }
+
+            return newCurrentShape;
+        }
+
+        function checkPosition(offsetX, offsetY, newCurrentShape) {
             offsetX = offsetX || 0;
             offsetY = offsetY || 0;
+            newCurrentShape = newCurrentShape || currentShape;
 
             offsetX = positionX + offsetX;
             offsetY = positionY + offsetY;
 
             for (let y = 0; y < 4; ++y) {
                 for (let x = 0; x < 4; ++x) {
-                    if (currentShape[y][x]) {
+                    if (newCurrentShape[y][x]) {
                         if (x + offsetX < 0 ||
                             y + offsetY >= ROWS ||
                             x + offsetX >= COLS) {
