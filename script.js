@@ -1,89 +1,119 @@
 (function () {
     'use strict';
-
-    let COLS = 10, ROWS = 20;
-    let WIDTH = 300, HEIGHT = 600;
+        
+    const ctx = document.getElementById('canvas-tetris').getContext('2d');
+    const COLS = 10, ROWS = 20;
+    const WIDTH = 300, HEIGHT = 600;
+    let canvas = [];
     let interval;
     let currentShape;
     let shapeSize;
+    let shapeColor;
     let positionX, positionY;
     let shapes = [
-        [4,
-         0, 1, 0, 0,
-         0, 1, 0, 0,
-         0, 1, 0, 0,
-         0, 1],
+        {
+            name: 'I-shape',
+            size: 4,
+            color: 'lightblue',
+            model: [0, 1, 0, 0,
+                    0, 1, 0, 0,
+                    0, 1, 0, 0,
+                    0, 1]
+        },
 
-        [3, // size of matrix
-         1, 1, 1,
-         1],
+        {
+            name: 'L-shape',
+            size: 3,
+            color: 'orange',
+            model: [1, 1, 1,
+                    1]
+        },
 
-        [3,
-         1, 1, 1,
-         0, 0, 1],
+        {
+            name: 'J-shape',
+            size: 3,
+            color: 'blue',
+            model: [1, 1, 1,
+                    0, 0, 1]
+        },
 
-        [2,
-         1, 1,
-         1, 1],
+        {
+            name: 'O-shape',
+            size: 2,
+            color: 'yellow',
+            model: [1, 1,
+                    1, 1]
+        },
 
-        [3,
-         1, 1, 0,
-         0, 1, 1],
+        {
+            name: 'Z-shape',
+            size: 3,
+            color: 'red',
+            model: [1, 1, 0,
+                    0, 1, 1]
+        },
 
-        [3,
-         0, 1, 1,
-         1, 1],
+        {
+            name: 'S-shape',
+            size: 3,
+            color: 'green',
+            model: [0, 1, 1,
+                    1, 1]
+        },
 
-        [3,
-         0, 1, 0,
-         1, 1, 1]
+        {
+            name: 'T-shape',
+            size: 3,
+            color: 'purple',
+            model: [0, 1, 0,
+                    1, 1, 1]
+        }
     ];
 
     function newShape() {
-        let id = Math.floor(Math.random() * shapes.length);
-        let shape = shapes[id];
-        shapeSize = shape[0];
+        let shape = shapes[Math.floor(Math.random() * shapes.length)];
+        shapeSize = shape.size;
+        shapeColor = shape.color;
 
         currentShape = [];
-        for (let y = 0; y < shapeSize; ++y) {
+        for (let y = 0; y < shapeSize; y += 1) {
             currentShape[y] = [];
-            for (let x = 0; x < shapeSize; ++x) {
+            for (let x = 0; x < shapeSize; x += 1) {
                 let i = shapeSize * y + x;
-                if (typeof shape[i + 1] != 'undefined' && shape[i + 1]) {
-                    currentShape[y][x] = 1;
-                }
-                else {
-                    currentShape[y][x] = 0;
-                }
+
+                currentShape[y][x] = shape.model[i] ? 1 : 0;
             }
         }
         
         positionX = Math.floor(Math.random() * COLS);
         positionY = 0;
-        for (let x = 0; x < shapeSize; x++) {
-            for (let y = 0; y < shapeSize; y++) {
-                if ((currentShape[y][x]) && x + positionX >= 10) {
-                    --positionX;
+        for (let x = 0; x < shapeSize; x += 1) {
+            for (let y = 0; y < shapeSize; y += 1) {
+                if (currentShape[y][x] && (x + positionX >= 10)) {
+                    positionX -= 1;
                 }
             }
         }
     }
 
-    function drawFigure() {
-        let ctx = document.getElementById('canvas-tetris').getContext('2d');
+    function drawShape() {
         ctx.clearRect(0, 0, 300, 600)
-        for (let y = 0; y < shapeSize; ++y) {
-            for (let x = 0; x < shapeSize; ++x) {
+        for (let y = 0; y < shapeSize; y += 1) {
+            for (let x = 0; x < shapeSize; x += 1) {
                 if (currentShape[y][x]) {
-                    ctx.fillStyle = "yellow";
-                    ctx.fillRect( x * WIDTH/COLS + positionX * WIDTH / COLS,
-                                    y * HEIGHT/ROWS + positionY * HEIGHT / ROWS,
-                                    WIDTH / COLS - 2, HEIGHT / ROWS - 2);
+                    ctx.fillStyle = shapeColor;
+                    ctx.fillRect(
+                        x * WIDTH / COLS + positionX * WIDTH / COLS,
+                        y * HEIGHT / ROWS + positionY * HEIGHT / ROWS,
+                        WIDTH / COLS - 2, HEIGHT / ROWS - 2
+                        );
                     ctx.strokeStyle = "black";
                     ctx.lineWidth = 3;
-                    ctx.strokeRect( x * WIDTH/COLS + positionX * WIDTH / COLS,
-                                    y * HEIGHT/ROWS + positionY * HEIGHT / ROWS,
-                                    WIDTH / COLS - 1, HEIGHT / ROWS - 1);
+                    ctx.strokeRect(
+                        x * WIDTH / COLS + positionX * WIDTH / COLS,
+                        y * HEIGHT / ROWS + positionY * HEIGHT / ROWS,
+                        WIDTH / COLS - 1, HEIGHT / ROWS - 1
+                        );
                 }
             }
         }
@@ -98,28 +128,27 @@
         };
 
         keyPress(keys[e.keyCode]);
-        drawFigure();
     };
 
     function keyPress(key) {
         switch (key) {
             case 'left':
                 if (checkPosition(-1)) {
-                    --positionX;
+                    positionX -= 1;
                 }
                 break;
             case 'right':
                 if (checkPosition(1)) {
-                    ++positionX;
+                    positionX += 1;
                 }
                 break;
             case 'down':
-                // if (checkPosition(0, 1)) {
-                    ++positionY;
-                // }
+                if (checkPosition(0, 1)) {
+                    positionY += 1;
+                }
                 break;
             case 'rotate':
-                let rotated = rotate(currentShape);
+                let rotated = rotateShape(currentShape);
                 if (checkPosition(0, 0, rotated)) {
                     currentShape = rotated;
                 }
@@ -127,19 +156,19 @@
         }
     }
 
-    function rotate(currentShape) {
+    function rotateShape(currentShape) {
         let newCurrentShape = [];
         if (shapeSize == 4) {
-            for (let y = 0; y < shapeSize; ++y) {
+            for (let y = 0; y < shapeSize; y += 1) {
                 newCurrentShape[y] = [];
-                for (let x = 0; x < shapeSize; ++x) {
+                for (let x = 0; x < shapeSize; x += 1) {
                     newCurrentShape[y][x] = currentShape[x][y];
                 }
             }
         } else {
-            for (let y = 0; y < shapeSize; ++y) {
+            for (let y = 0; y < shapeSize; y += 1) {
                 newCurrentShape[y] = [];
-                for (let x = 0; x < shapeSize; ++x) {
+                for (let x = 0; x < shapeSize; x += 1) {
                     newCurrentShape[y][x] = currentShape[shapeSize - 1 - x][y];
                 }
             }
@@ -147,20 +176,19 @@
         return newCurrentShape;
     }
 
-    function checkPosition(offsetX, offsetY, newCurrentShape) {
-        offsetX = offsetX || 0;
-        offsetY = offsetY || 0;
-        newCurrentShape = newCurrentShape || currentShape;
-
+    function checkPosition(offsetX = 0, offsetY = 0, newCurrentShape = currentShape) {
         offsetX = positionX + offsetX;
         offsetY = positionY + offsetY;
 
-        for (let y = 0; y < shapeSize; ++y) {
-            for (let x = 0; x < shapeSize; ++x) {
+        for (let y = 0; y < shapeSize; y += 1) {
+            for (let x = 0; x < shapeSize; x += 1) {
                 if (newCurrentShape[y][x]) {
-                    if (x + offsetX < 0 ||
+                    if (
+                        x + offsetX < 0 ||
                         y + offsetY >= ROWS ||
-                        x + offsetX >= COLS) {
+                        x + offsetX >= COLS ||
+                        canvas[y + offsetY][x + offsetX]
+                        ) {
                         return false;
                     }
                 }
@@ -170,19 +198,86 @@
     }
 
     function moveShape() {
-        drawFigure();
-        if (checkPosition(0, 0)) {
-            ++positionY;
+        if (checkPosition(0, 1)) {
+            positionY += 1;
         } else {
+            freezeShape();
             newShape();
+        }
+    }
+
+    function freezeShape() {
+        for (let y = 0; y < shapeSize; y += 1) {
+            for (let x = 0; x < shapeSize; x += 1) {
+                if (currentShape[y][x]) {
+                    canvas[y + positionY][x + positionX] = currentShape[y][x];
+                }
+            }
+        }
+    }
+
+    function clearCanvas() {
+        for (let y = 0; y < ROWS; y += 1) {
+            canvas[y] = [];
+            for (let x = 0; x < COLS; x += 1) {
+                canvas[y][x] = 0;
+            }
+        }
+    }
+
+    function renderCanvas() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        // draw canvas
+        for (let x = 0; x < COLS; x += 1) {
+            for (let y = 0; y < ROWS; y += 1) {
+                if (canvas[y][x]) {
+                    ctx.fillStyle = "lightgreen";
+                    ctx.fillRect(
+                        x * WIDTH / COLS,
+                        y * HEIGHT / ROWS,
+                        WIDTH / COLS - 2, HEIGHT / ROWS - 2
+                                 );
+                    ctx.strokeStyle = "black";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        x * WIDTH / COLS,
+                        y * HEIGHT  /ROWS,
+                        WIDTH / COLS - 1, HEIGHT / ROWS - 1
+                        );
+                }
+            }
+        }
+
+        // draw moving shape
+        for (let y = 0; y < shapeSize; y += 1) {
+            for (let x = 0; x < shapeSize; x += 1) {
+                if (currentShape[y][x]) {
+                    ctx.fillStyle = shapeColor;
+                    ctx.fillRect(
+                        x * WIDTH / COLS + positionX * WIDTH / COLS,
+                        y * HEIGHT / ROWS + positionY * HEIGHT / ROWS,
+                        WIDTH / COLS - 2, HEIGHT / ROWS - 2
+                        );
+                    ctx.strokeStyle = "black";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        x * WIDTH / COLS + positionX * WIDTH / COLS,
+                        y * HEIGHT / ROWS + positionY * HEIGHT / ROWS,
+                        WIDTH / COLS - 1, HEIGHT / ROWS - 1
+                        );
+                }
+            }
         }
     }
 
     function newGame() {
         clearInterval(interval);
+        clearCanvas();
         newShape();
         interval = setInterval(moveShape, 500);
     }
 
     newGame();
+    setInterval(renderCanvas, 10);
 }());
