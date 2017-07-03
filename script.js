@@ -6,6 +6,7 @@
     const WIDTH = 300, HEIGHT = 600;
     let canvas = [];
     let interval;
+    let timer;
     let currentShape;
     let shapeSize;
     let shapeColor;
@@ -101,7 +102,8 @@
             37: 'left',
             39: 'right',
             40: 'down',
-            38: 'rotate'
+            38: 'rotate',
+            32: 'pause'
         };
 
         keyPress(keys[e.keyCode]);
@@ -110,26 +112,28 @@
     function keyPress(key) {
         switch (key) {
             case 'left':
-                if (checkPosition(-1)) {
+                if (checkPosition(-1) && timer) {
                     positionX -= 1;
                 }
                 break;
             case 'right':
-                if (checkPosition(1)) {
+                if (checkPosition(1) && timer) {
                     positionX += 1;
                 }
                 break;
             case 'down':
-                if (checkPosition(0, 1)) {
+                if (checkPosition(0, 1) && timer) {
                     positionY += 1;
                 }
                 break;
             case 'rotate':
                 let rotated = rotateShape(currentShape);
-                if (checkPosition(0, 0, rotated)) {
+                if (checkPosition(0, 0, rotated) && timer) {
                     currentShape = rotated;
                 }
                 break;
+            case 'pause':
+                gamePause();
         }
     }
 
@@ -279,9 +283,20 @@
             }
         }
     }
+    
+    function gamePause() {
+        if (timer) {
+            clearInterval(interval);
+            timer = false;
+        } else {
+            interval = setInterval(moveShape, 500);
+            timer = true;
+        }
+    }
 
     function newGame() {
         clearInterval(interval);
+        timer = true;
         clearCanvas();
         newShape();
         interval = setInterval(moveShape, 500);
