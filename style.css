@@ -1,5 +1,26 @@
-canvas {
+.wrapper {
     display: block;
     margin: 0 auto;
+    width: 704px;
+}
+
+#canvas-tetris {
+    display: block;
+    float: left;
+    left: 50%;
     border: 1px solid black;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 20px;
+}
+
+.box-left {
+    float: left;
+    width: 150px;
+}
+
+#canvas-shape {
+    display: block;
+    border: 1px solid black;
+    float: right;
 }

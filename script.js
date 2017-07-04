@@ -17,9 +17,9 @@
             size: 4,
             color: 'lightblue',
             model: [0, 1, 0, 0,
-                0, 1, 0, 0,
-                0, 1, 0, 0,
-                0, 1]
+                    0, 1, 0, 0,
+                    0, 1, 0, 0,
+                    0, 1]
         },
 
         {
@@ -27,7 +27,7 @@
             size: 3,
             color: 'orange',
             model: [1, 1, 1,
-                1]
+                    1]
         },
 
         {
@@ -35,7 +35,7 @@
             size: 3,
             color: 'blue',
             model: [1, 1, 1,
-                0, 0, 1]
+                    0, 0, 1]
         },
 
         {
@@ -43,7 +43,7 @@
             size: 2,
             color: 'yellow',
             model: [1, 1,
-                1, 1]
+                    1, 1]
         },
 
         {
@@ -51,7 +51,7 @@
             size: 3,
             color: 'red',
             model: [1, 1, 0,
-                0, 1, 1]
+                    0, 1, 1]
         },
 
         {
@@ -59,7 +59,7 @@
             size: 3,
             color: 'green',
             model: [0, 1, 1,
-                1, 1]
+                    1, 1]
         },
 
         {
@@ -67,34 +67,44 @@
             size: 3,
             color: 'purple',
             model: [0, 1, 0,
-                1, 1, 1]
+                    1, 1, 1]
         }
     ];
 
-    function newShape() {
+    let nextShape = newShape(shapes);
+
+    function newShape(shapes) {
         let shape = shapes[Math.floor(Math.random() * shapes.length)];
-        shapeSize = shape.size;
-        shapeColor = shape.color;
+        let shapeSize_ = shape.size;
+        let shapeColor_ = shape.color;
 
-        currentShape = [];
-        for (let y = 0; y < shapeSize; y += 1) {
-            currentShape[y] = [];
-            for (let x = 0; x < shapeSize; x += 1) {
-                let i = shapeSize * y + x;
+        let currentShape_ = [];
+        for (let y = 0; y < shapeSize_; y += 1) {
+            currentShape_[y] = [];
+            for (let x = 0; x < shapeSize_; x += 1) {
+                let i = shapeSize_ * y + x;
 
-                currentShape[y][x] = shape.model[i] ? 1 : 0;
+                currentShape_[y][x] = shape.model[i] ? 1 : 0;
             }
         }
 
-        positionX = Math.floor(Math.random() * COLS);
-        positionY = 0;
-        for (let x = 0; x < shapeSize; x += 1) {
-            for (let y = 0; y < shapeSize; y += 1) {
-                if (currentShape[y][x] && (x + positionX >= 10)) {
-                    positionX -= 1;
+        let positionX_ = Math.floor(Math.random() * COLS);
+        let positionY_ = 0;
+        for (let x = 0; x < shapeSize_; x += 1) {
+            for (let y = 0; y < shapeSize_; y += 1) {
+                if (currentShape_[y][x] && (x + positionX_ >= 10)) {
+                    positionX_ -= 1;
                 }
             }
         }
+
+        return {
+            currentShape: currentShape_,
+            shapeSize: shapeSize_,
+            shapeColor: shapeColor_,
+            positionX: positionX_,
+            positionY: positionY_
+        };
     }
 
     document.body.onkeydown = function (e) {
@@ -184,7 +194,7 @@
         } else {
             freezeShape();
             clearLines();
-            newShape();
+            releaseShape();
         }
     }
 
@@ -202,7 +212,7 @@
         let newRow = [0,0,0,0,0,0,0,0,0,0];
 
         function isFilled(block) {
-            return block === 1;
+            return block;
         }
         
         function cutRow(y, newRow) {
@@ -283,7 +293,35 @@
             }
         }
     }
-    
+
+    function renderNextShape(nextShape, shapeSize, shapeColor) {
+        let ctx_ = document.getElementById('canvas-shape').getContext('2d');
+        let COLS_ = 5, ROWS_ = 10;
+        let WIDTH_ = 150, HEIGHT_ = 300;
+
+        ctx_.clearRect(0, 0, WIDTH_, HEIGHT_);
+
+        for (let y = 0; y < shapeSize; y += 1) {
+            for (let x = 0; x < shapeSize; x += 1) {
+                if (nextShape[y][x]) {
+                    ctx_.fillStyle = shapeColor;
+                    ctx_.fillRect(
+                        x * WIDTH_ / COLS_,
+                        y * HEIGHT_ / ROWS_,
+                        WIDTH_ / COLS_, HEIGHT_ / ROWS_
+                    );
+                    ctx_.strokeStyle = 'black';
+                    ctx_.lineWidth = 2;
+                    ctx_.strokeRect(
+                        x * WIDTH_ / COLS_,
+                        y * HEIGHT_ / ROWS_,
+                        WIDTH_ / COLS_, HEIGHT_ / ROWS_
+                    );
+                }
+            }
+        }
+    }
+
     function gamePause() {
         if (timer) {
             clearInterval(interval);
@@ -294,12 +332,23 @@
         }
     }
 
+    function releaseShape() {
+        currentShape = nextShape.currentShape;
+        shapeColor = nextShape.shapeColor;
+        shapeSize = nextShape.shapeSize;
+        positionX = nextShape.positionX;
+        positionY = nextShape.positionY;
+        nextShape = newShape(shapes);
+        renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
+    }
+
+
     function newGame() {
         clearInterval(interval);
-        timer = true;
         clearCanvas();
-        newShape();
+        timer = true;
         interval = setInterval(moveShape, 500);
+        releaseShape();
     }
 
     newGame();
