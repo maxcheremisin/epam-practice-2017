@@ -1,17 +1,29 @@
+html {
+    font-family: sans-serif;
+    font-size: 20px;
+}
+
 .wrapper {
     display: block;
     margin: 0 auto;
     width: 704px;
 }
 
-#canvas-tetris {
+.score {
+    padding-top: 20px;    
+}
+
+.box-center {
     display: block;
     float: left;
     left: 50%;
-    border: 1px solid black;
     margin-left: 50px;
     margin-right: 50px;
     margin-bottom: 20px;
+}
+
+#canvas-tetris {
+    border: 1px solid black;
 }
 
 .box-left {
@@ -19,8 +31,16 @@
     width: 150px;
 }
 
-#canvas-shape {
+.box-right {
     display: block;
-    border: 1px solid black;
     float: right;
+}
+
+/*#canvas-shape {
+    border: 1px solid black;
+}*/
+
+.next-shape-header {
+    text-align: center;
+    padding-top: 20px;
 }

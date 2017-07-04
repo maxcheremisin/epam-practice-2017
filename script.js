@@ -296,25 +296,31 @@
 
     function renderNextShape(nextShape, shapeSize, shapeColor) {
         let ctx_ = document.getElementById('canvas-shape').getContext('2d');
-        let COLS_ = 5, ROWS_ = 10;
-        let WIDTH_ = 150, HEIGHT_ = 300;
+        let COLS_ = 5, ROWS_ = 6;
+        let WIDTH_ = 150, HEIGHT_ = 180;
+        let offset;
 
         ctx_.clearRect(0, 0, WIDTH_, HEIGHT_);
 
         for (let y = 0; y < shapeSize; y += 1) {
             for (let x = 0; x < shapeSize; x += 1) {
                 if (nextShape[y][x]) {
+                    if (shapeSize === 2) {
+                        offset = (WIDTH_ / COLS_) * 1.5;
+                    } else {
+                        offset = WIDTH_ / COLS_;
+                    }
                     ctx_.fillStyle = shapeColor;
                     ctx_.fillRect(
-                        x * WIDTH_ / COLS_,
-                        y * HEIGHT_ / ROWS_,
+                        x * WIDTH_ / COLS_ + offset,
+                        y * HEIGHT_ / ROWS_ + HEIGHT_ / ROWS_,
                         WIDTH_ / COLS_, HEIGHT_ / ROWS_
                     );
                     ctx_.strokeStyle = 'black';
                     ctx_.lineWidth = 2;
                     ctx_.strokeRect(
-                        x * WIDTH_ / COLS_,
-                        y * HEIGHT_ / ROWS_,
+                        x * WIDTH_ / COLS_ + offset,
+                        y * HEIGHT_ / ROWS_ + HEIGHT_ / ROWS_,
                         WIDTH_ / COLS_, HEIGHT_ / ROWS_
                     );
                 }

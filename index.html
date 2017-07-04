@@ -9,20 +9,25 @@
 <body>
 
 <div class="wrapper">
-<div class="box-left">
-    <div class="score">Your score will be here</div>
-    <div class="control">
-        <ul>
-            <li>SPACE - PAUSE</li>
-            <li>UP - ROTATE</li>
-            <li>LEFT - MOVE LEFT</li>
-            <li>RIGHT - MOVE RIGHT</li>
-            <li>DOWN - MOVE DOWN</li>
-        </ul>
+    <div class="box-left">
+        <div class="score">Your score will be here</div>
+        <div class="control">
+            <ul>
+                <li>SPACE - PAUSE</li>
+                <li>UP - ROTATE</li>
+                <li>LEFT - MOVE LEFT</li>
+                <li>RIGHT - MOVE RIGHT</li>
+                <li>DOWN - MOVE DOWN</li>
+            </ul>
+        </div>
     </div>
-</div>
-<canvas id="canvas-tetris" width="300" height="600"></canvas>
-<canvas id="canvas-shape" width="150" height="300"></canvas>
+    <div class="box-center">
+        <canvas id="canvas-tetris" width="300" height="600"></canvas>
+    </div>
+    <div class="box-right">
+        <div class="next-shape-header">NEXT SHAPE</div>
+        <canvas id="canvas-shape" width="150" height="180"></canvas>
+    </div>
 </div>
 
 </body>
