@@ -9,38 +9,110 @@ html {
     width: 704px;
 }
 
+/*SCORE*/
+
 .score {
-    padding-top: 20px;    
+    height: 180px;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
+.score-header {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.score-count {
+    text-align: center;
+    padding-top: 30px;
+    font-size: 1.5em;
+}
+
+
+/*CONTROL MANUAL*/
+
+img {
+    height: 50px;
+    border-radius: 5px;
+}
+
+.control {
+    font-weight: bolder;
+}
+
+/*PAUSE*/
+.control-pause {
+    margin-bottom: 30px;
+}
+
+.pause-label {
+    text-align: center;
+}
+
+/*ROTATE*/
+.control-rotate {
+    text-align: center;
+    line-height: 50px;
+    margin-bottom: 30px;
+}
+
+.rotate-image {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.rotate-label {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+/*MOVE*/
+.move-label {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.move-left, .move-down, .move-right {
+    display: inline-block;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.move-left, .move-down {
+    padding-right: 9px;
+}
+
+
+/*TETRIS CANVAS*/
 .box-center {
     display: block;
     float: left;
     left: 50%;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
     margin-bottom: 20px;
 }
 
 #canvas-tetris {
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 .box-left {
     float: left;
-    width: 150px;
+    width: 190px;
 }
 
+
+/*NEXT SHAPE*/
 .box-right {
     display: block;
     float: right;
 }
 
-/*#canvas-shape {
-    border: 1px solid black;
-}*/
-
 .next-shape-header {
     text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
     padding-top: 20px;
 }

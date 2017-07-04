@@ -4,9 +4,11 @@
     const ctx = document.getElementById('canvas-tetris').getContext('2d');
     const COLS = 10, ROWS = 20;
     const WIDTH = 300, HEIGHT = 600;
+    let score;
+    let speed;
     let canvas = [];
     let interval;
-    let timer;
+    let pause;
     let currentShape;
     let shapeSize;
     let shapeColor;
@@ -122,23 +124,23 @@
     function keyPress(key) {
         switch (key) {
             case 'left':
-                if (checkPosition(-1) && timer) {
+                if (checkPosition(-1) && !pause) {
                     positionX -= 1;
                 }
                 break;
             case 'right':
-                if (checkPosition(1) && timer) {
+                if (checkPosition(1) && !pause) {
                     positionX += 1;
                 }
                 break;
             case 'down':
-                if (checkPosition(0, 1) && timer) {
+                if (checkPosition(0, 1) && !pause) {
                     positionY += 1;
                 }
                 break;
             case 'rotate':
                 let rotated = rotateShape(currentShape);
-                if (checkPosition(0, 0, rotated) && timer) {
+                if (checkPosition(0, 0, rotated) && !pause) {
                     currentShape = rotated;
                 }
                 break;
@@ -218,6 +220,13 @@
         function cutRow(y, newRow) {
             canvas.splice(y, 1);
             canvas.unshift(newRow);
+            score += 100;
+            updateScore();
+            if (speed > 140) {
+                speed -= 20;
+            }
+            clearInterval(interval);
+            interval = setInterval(moveShape, speed)
         }
 
         for (let y = 0; y < ROWS; y += 1) {
@@ -329,16 +338,22 @@
     }
 
     function gamePause() {
-        if (timer) {
-            clearInterval(interval);
-            timer = false;
+        if (pause) {
+            interval = setInterval(moveShape, speed);
+            pause = false;
         } else {
-            interval = setInterval(moveShape, 500);
-            timer = true;
+            clearInterval(interval);
+            pause = true;
         }
     }
 
+    function updateScore() {
+        let scoreField = document.querySelector('.score-count');
+        scoreField.innerHTML = score;
+    }
+
     function releaseShape() {
+        score += 10;
         currentShape = nextShape.currentShape;
         shapeColor = nextShape.shapeColor;
         shapeSize = nextShape.shapeSize;
@@ -346,14 +361,17 @@
         positionY = nextShape.positionY;
         nextShape = newShape(shapes);
         renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
+        updateScore();
     }
 
 
     function newGame() {
         clearInterval(interval);
         clearCanvas();
-        timer = true;
-        interval = setInterval(moveShape, 500);
+        score = -10;
+        speed = 500;
+        pause = false;
+        interval = setInterval(moveShape, speed);
         releaseShape();
     }
 
