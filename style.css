@@ -15,6 +15,7 @@ html {
     height: 180px;
     font-size: 1.2em;
     font-weight: bold;
+    padding-bottom: 30px;
 }
 
 .score-header {
@@ -26,8 +27,12 @@ html {
     text-align: center;
     padding-top: 30px;
     font-size: 1.5em;
+    padding-bottom: 30px;
 }
 
+.score-rows{
+    text-align: center;
+}
 
 /*CONTROL MANUAL*/
 

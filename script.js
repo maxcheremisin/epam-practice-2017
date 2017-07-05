@@ -4,12 +4,13 @@
     const ctx = document.getElementById('canvas-tetris').getContext('2d');
     const COLS = 10, ROWS = 20;
     const WIDTH = 300, HEIGHT = 600;
-    let score;
+    let playing;
+    let score, rows;
     let speed;
     let canvas = [];
     let interval;
     let pause;
-    let currentShape;
+    let currentShape, nextShape;
     let shapeSize;
     let shapeColor;
     let positionX, positionY;
@@ -73,8 +74,6 @@
         }
     ];
 
-    let nextShape = newShape(shapes);
-
     function newShape(shapes) {
         let shape = shapes[Math.floor(Math.random() * shapes.length)];
         let shapeSize_ = shape.size;
@@ -86,7 +85,7 @@
             for (let x = 0; x < shapeSize_; x += 1) {
                 let i = shapeSize_ * y + x;
 
-                currentShape_[y][x] = shape.model[i] ? 1 : 0;
+                currentShape_[y][x] = shape.model[i] ? shapeColor_ : 0;
             }
         }
 
@@ -145,7 +144,11 @@
                 }
                 break;
             case 'pause':
-                gamePause();
+                if (!playing) {
+                    newGame();
+                } else {
+                    gamePause();
+                }
         }
     }
 
@@ -208,42 +211,36 @@
                 }
             }
         }
+
+        if (positionY === 0) {
+            loseGame();
+        }
     }
 
     function clearLines() {
-        let newRow = [0,0,0,0,0,0,0,0,0,0];
-
-        function isFilled(block) {
-            return block;
-        }
-        
-        function cutRow(y, newRow) {
-            canvas.splice(y, 1);
-            canvas.unshift(newRow);
-            score += 100;
-            updateScore();
-            if (speed > 140) {
-                speed -= 20;
-            }
-            clearInterval(interval);
-            interval = setInterval(moveShape, speed)
-        }
-
-        for (let y = 0; y < ROWS; y += 1) {
-            if (canvas[y].every(isFilled)) {
-                for (let x = 0; x < COLS; x += 1) {
-                    setTimeout(function () {
-                        if (canvas[y][x]) {
-                            ctx.fillStyle = 'yellow';
-                            ctx.fillRect(
-                                x * WIDTH / COLS,
-                                y * HEIGHT / ROWS,
-                                WIDTH / COLS, HEIGHT / ROWS
-                            );
-                        }
-                    }, 10)
+        for (let y = ROWS - 1; y >= 0; y -= 1) {
+            let rowFilled = true;
+            for (let x = 0; x < COLS; x += 1) {
+                if (canvas[y][x] === 0 ) {
+                    rowFilled = false;
+                    break;
                 }
-                setTimeout(cutRow, 20, y, newRow);
+            }
+            if (rowFilled) {
+                for (let y_ = y; y_ > 0; y_ -= 1) {
+                    for (let x = 0; x < COLS; x += 1) {
+                        canvas[y_][x] = canvas[y_ - 1][x];
+                    }
+                }
+                y += 1;
+                score += 100;
+                rows += 1;
+                updateScore();
+                if (speed > 200) {
+                    speed -= 10;
+                }
+                clearInterval(interval);
+                interval = setInterval(moveShape, speed)
             }
         }
     }
@@ -264,7 +261,7 @@
         for (let x = 0; x < COLS; x += 1) {
             for (let y = 0; y < ROWS; y += 1) {
                 if (canvas[y][x]) {
-                    ctx.fillStyle = 'yellowgreen';
+                    ctx.fillStyle = canvas[y][x];
                     ctx.fillRect(
                         x * WIDTH / COLS,
                         y * HEIGHT / ROWS,
@@ -349,28 +346,41 @@
 
     function updateScore() {
         let scoreField = document.querySelector('.score-count');
+        let rowsField = document.querySelector('.score-rows');
+
         scoreField.innerHTML = score;
+        rowsField.innerHTML = 'ROWS: ' + rows;
     }
 
     function releaseShape() {
-        score += 10;
-        currentShape = nextShape.currentShape;
-        shapeColor = nextShape.shapeColor;
-        shapeSize = nextShape.shapeSize;
-        positionX = nextShape.positionX;
-        positionY = nextShape.positionY;
-        nextShape = newShape(shapes);
-        renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
-        updateScore();
+        if (playing) {
+            score += 10;
+            currentShape = nextShape.currentShape;
+            shapeColor = nextShape.shapeColor;
+            shapeSize = nextShape.shapeSize;
+            positionX = nextShape.positionX;
+            positionY = nextShape.positionY;
+            nextShape = newShape(shapes);
+            renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
+            updateScore();
+        }
     }
 
+    function loseGame() {
+        clearInterval(interval);
+        playing = false;
+        alert('YOU LOSE нажмите SPACE для начала новой игры');
+    }
 
     function newGame() {
-        clearInterval(interval);
-        clearCanvas();
-        score = -10;
-        speed = 500;
+        nextShape = newShape(shapes);
+        playing = true;
         pause = false;
+        score = -10;
+        rows = 0;
+        speed = 500;
+        clearCanvas();
+        clearInterval(interval);
         interval = setInterval(moveShape, speed);
         releaseShape();
     }
