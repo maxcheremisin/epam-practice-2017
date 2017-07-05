@@ -35,14 +35,11 @@ html {
 }
 
 /*CONTROL MANUAL*/
-
-img {
-    height: 50px;
-    border-radius: 5px;
-}
-
 .control {
     font-weight: bolder;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /*PAUSE*/
@@ -50,21 +47,47 @@ img {
     margin-bottom: 30px;
 }
 
+.pause-image {
+    position: relative;
+    height: 50px;
+    background: url("img/space.png");
+    background-size: auto 50px;
+    border-radius: 7px;
+}
+
+.pause-image:active {
+    box-shadow: inset 0 0 20px -5px rgba(46,46,46,1);
+    top: .05em;
+}
+
 .pause-label {
     text-align: center;
+    margin-top: 5px;
 }
 
 /*ROTATE*/
 .control-rotate {
     text-align: center;
     line-height: 50px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .rotate-image {
+    position: relative;
     display: inline-block;
     vertical-align: middle;
+    height: 50px;
+    width: 53.03px;
+    background: url("img/up.png");
+    background-size: auto 50px;
+    border-radius: 7px;
 }
+
+.rotate-image:active {
+    box-shadow: inset 0 0 20px -5px rgba(46,46,46,1);
+    top: .05em;
+}
+
 
 .rotate-label {
     display: inline-block;
@@ -75,7 +98,7 @@ img {
 /*MOVE*/
 .move-label {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .move-left, .move-down, .move-right {
@@ -88,6 +111,62 @@ img {
     padding-right: 9px;
 }
 
+.left-label, .down-label, .right-label {
+    margin-top: 5px;
+}
+
+/*LEFT*/
+.left-image {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 50px;
+    width: 53.03px;
+    background: url("img/left.png");
+    background-size: auto 50px;
+    border-radius: 7px;
+}
+
+.left-image:active {
+    box-shadow: inset 0 0 20px -5px rgba(46,46,46,1);
+    top: .05em;
+    right: .05em;
+}
+
+/*DOWN*/
+.down-image {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 50px;
+    width: 53.03px;
+    background: url("img/down.png");
+    background-size: auto 50px;
+    border-radius: 7px;
+}
+
+.down-image:active {
+    box-shadow: inset 0 0 20px -5px rgba(46,46,46,1);
+    top: .05em;
+}
+
+/*RIGHT*/
+.right-image {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 50px;
+    width: 53.03px;
+    background: url("img/right.png");
+    background-size: auto 50px;
+    border-radius: 7px;
+}
+
+.right-image:active {
+    box-shadow: inset 0 0 20px -5px rgba(46,46,46,1);
+    top: .05em;
+    left: .05em;
+}
 
 /*TETRIS CANVAS*/
 .box-center {

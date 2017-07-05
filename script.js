@@ -74,6 +74,8 @@
         }
     ];
 
+    // Math.random() * shapes.length
+
     function newShape(shapes) {
         let shape = shapes[Math.floor(Math.random() * shapes.length)];
         let shapeSize_ = shape.size;
@@ -108,6 +110,53 @@
         };
     }
 
+    function controlButtons() {
+        let space = document.querySelector('.pause-image');
+        let up = document.querySelector('.rotate-image');
+        let left = document.querySelector('.left-image');
+        let down = document.querySelector('.down-image');
+        let right = document.querySelector('.right-image');
+
+        space.addEventListener('click', onPauseButton);
+        up.addEventListener('click', onRotateButton);
+        left.addEventListener('click', onLeftButton);
+        down.addEventListener('click', onDownButton);
+        right.addEventListener('click', onRightButton);
+    }
+
+    function onPauseButton() {
+        if (!playing) {
+            newGame();
+        } else {
+            gamePause();
+        }
+    }
+
+    function onRotateButton() {
+        let rotated = rotateShape(currentShape);
+        if (checkPosition(0, 0, rotated) && !pause) {
+            currentShape = rotated;
+        }
+    }
+
+    function onLeftButton() {
+        if (checkPosition(-1) && !pause) {
+            positionX -= 1;
+        }
+    }
+
+    function onDownButton() {
+        if (checkPosition(0, 1) && !pause) {
+            positionY += 1;
+        }
+    }
+
+    function onRightButton() {
+        if (checkPosition(1) && !pause) {
+            positionX += 1;
+        }
+    }
+
     document.body.onkeydown = function (e) {
         let keys = {
             37: 'left',
@@ -123,32 +172,19 @@
     function keyPress(key) {
         switch (key) {
             case 'left':
-                if (checkPosition(-1) && !pause) {
-                    positionX -= 1;
-                }
+                onLeftButton();
                 break;
             case 'right':
-                if (checkPosition(1) && !pause) {
-                    positionX += 1;
-                }
+                onRightButton();
                 break;
             case 'down':
-                if (checkPosition(0, 1) && !pause) {
-                    positionY += 1;
-                }
+                onDownButton();
                 break;
             case 'rotate':
-                let rotated = rotateShape(currentShape);
-                if (checkPosition(0, 0, rotated) && !pause) {
-                    currentShape = rotated;
-                }
+                onRotateButton();
                 break;
             case 'pause':
-                if (!playing) {
-                    newGame();
-                } else {
-                    gamePause();
-                }
+                onPauseButton();
         }
     }
 
@@ -386,5 +422,6 @@
     }
 
     newGame();
+    controlButtons();
     setInterval(renderCanvas, 20);
 }());
