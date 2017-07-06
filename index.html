@@ -15,10 +15,23 @@
             <div class="score-count"></div>
             <div class="score-rows">ROWS:</div>
         </div>
+        <div class="game-over"></div>
+        <div class="best-score">
+            <div class="best-score-header">BEST SCORE</div>
+            <div class="best-score-count"></div>
+        </div>
+    </div>
+    <div class="box-center">
+        <canvas id="canvas-tetris" width="300" height="600"></canvas>
+    </div>
+    <div class="box-right">
+        <div class="next-shape-header">NEXT SHAPE</div>
+        <canvas id="canvas-shape" width="150" height="180"></canvas>
         <div class="control">
+            <div class="control-label">PRESS TO</div>
             <div class="control-pause">
                 <div class="pause-image"></div>
-                <div class="pause-label">PAUSE</div>
+                <div class="pause-label"><span class="pause-label-red">PLAY</span></div>
             </div>
             <div class="control-rotate">
                 <div class="rotate-image"></div>
@@ -40,13 +53,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="box-center">
-        <canvas id="canvas-tetris" width="300" height="600"></canvas>
-    </div>
-    <div class="box-right">
-        <div class="next-shape-header">NEXT SHAPE</div>
-        <canvas id="canvas-shape" width="150" height="180"></canvas>
     </div>
 </div>
 

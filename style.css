@@ -6,10 +6,17 @@ html {
 .wrapper {
     display: block;
     margin: 0 auto;
-    width: 704px;
+    width: 732px;
 }
 
 /*SCORE*/
+
+.box-left {
+    position: relative;
+    float: left;
+    width: 190px;
+    height: 600px;
+}
 
 .score {
     height: 180px;
@@ -25,6 +32,8 @@ html {
 
 .score-count {
     text-align: center;
+    line-height: 30px;
+    height: 30px;
     padding-top: 30px;
     font-size: 1.5em;
     padding-bottom: 30px;
@@ -34,6 +43,36 @@ html {
     text-align: center;
 }
 
+.best-score {
+    position: absolute;
+    bottom: 0px;
+    height: 180px;
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 30px;
+}
+
+.best-score-header {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.best-score-count {
+    text-align: center;
+    padding-top: 30px;
+    font-size: 1.5em;
+    padding-bottom: 30px;
+}
+
+.game-over {
+    font-size: 1.5em;
+    color: red;
+    font-weight: bold;
+    padding-top: 50px;
+}
+
+
 /*CONTROL MANUAL*/
 .control {
     font-weight: bolder;
@@ -42,9 +81,14 @@ html {
     -ms-user-select: none;
 }
 
+.control-label {
+    text-align: center;
+    padding-bottom: 25px;
+}
+
 /*PAUSE*/
 .control-pause {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .pause-image {
@@ -62,7 +106,14 @@ html {
 
 .pause-label {
     text-align: center;
-    margin-top: 5px;
+    margin-top: 10px;
+    line-height: 30px;
+    height: 40px;
+}
+
+.pause-label-red {
+    color: red;
+    font-size: 1.5em;
 }
 
 /*ROTATE*/
@@ -182,16 +233,15 @@ html {
     border: 2px solid black;
 }
 
-.box-left {
-    float: left;
-    width: 190px;
+/*NEXT SHAPE*/
+#canvas-shape {
+    margin-left: 20px;
 }
 
-
-/*NEXT SHAPE*/
 .box-right {
     display: block;
     float: right;
+    width: 190px;
 }
 
 .next-shape-header {

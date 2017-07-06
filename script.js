@@ -4,8 +4,8 @@
     const ctx = document.getElementById('canvas-tetris').getContext('2d');
     const COLS = 10, ROWS = 20;
     const WIDTH = 300, HEIGHT = 600;
-    let playing;
-    let score, rows;
+    let playing = false;
+    let score, rows, bestScore = 0;
     let speed;
     let canvas = [];
     let interval;
@@ -73,8 +73,6 @@
                     1, 1, 1]
         }
     ];
-
-    // Math.random() * shapes.length
 
     function newShape(shapes) {
         let shape = shapes[Math.floor(Math.random() * shapes.length)];
@@ -383,9 +381,14 @@
     function updateScore() {
         let scoreField = document.querySelector('.score-count');
         let rowsField = document.querySelector('.score-rows');
+        let bestScoreField = document.querySelector('.best-score-count');
 
         scoreField.innerHTML = score;
         rowsField.innerHTML = 'ROWS: ' + rows;
+        if (score > bestScore) {
+            bestScore = score;
+        }
+        bestScoreField.innerHTML = bestScore;
     }
 
     function releaseShape() {
@@ -403,14 +406,27 @@
     }
 
     function loseGame() {
+        let playButton = document.querySelector('.pause-label');
+        let gameOver = document.querySelector('.game-over');
+
         clearInterval(interval);
         playing = false;
-        alert('YOU LOSE нажмите SPACE для начала новой игры');
+        if (!playing) {
+            playButton.innerHTML = '<span class="pause-label-red">PLAY</span>';
+        }
+        gameOver.innerHTML = 'GAME OVER';
     }
 
     function newGame() {
+        let playButton = document.querySelector('.pause-label');
+        let gameOver = document.querySelector('.game-over');
+        
         nextShape = newShape(shapes);
         playing = true;
+        if (playing) {
+            playButton.innerHTML = 'PAUSE';
+        }
+        gameOver.innerHTML = '';
         pause = false;
         score = -10;
         rows = 0;
@@ -419,9 +435,8 @@
         clearInterval(interval);
         interval = setInterval(moveShape, speed);
         releaseShape();
+        setInterval(renderCanvas, 20);
     }
 
-    newGame();
     controlButtons();
-    setInterval(renderCanvas, 20);
 }());
