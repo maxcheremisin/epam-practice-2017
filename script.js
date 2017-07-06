@@ -269,7 +269,7 @@
                 y += 1;
                 score += 100;
                 rows += 1;
-                updateScore();
+                updateScoreFields();
                 if (speed > 200) {
                     speed -= 10;
                 }
@@ -378,7 +378,7 @@
         }
     }
 
-    function updateScore() {
+    function updateScoreFields() {
         let scoreField = document.querySelector('.score-count');
         let rowsField = document.querySelector('.score-rows');
         let bestScoreField = document.querySelector('.best-score-count');
@@ -394,39 +394,43 @@
     function releaseShape() {
         if (playing) {
             score += 10;
-            currentShape = nextShape.currentShape;
-            shapeColor = nextShape.shapeColor;
-            shapeSize = nextShape.shapeSize;
-            positionX = nextShape.positionX;
-            positionY = nextShape.positionY;
-            nextShape = newShape(shapes);
+            setNextShape();
             renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
-            updateScore();
+            updateScoreFields();
         }
+    }
+
+    function setNextShape() {
+        currentShape = nextShape.currentShape;
+        shapeColor = nextShape.shapeColor;
+        shapeSize = nextShape.shapeSize;
+        positionX = nextShape.positionX;
+        positionY = nextShape.positionY;
+        nextShape = newShape(shapes);
     }
 
     function loseGame() {
+        clearInterval(interval);
+        playing = false;
+        updateSpaceButton('PLAY', 'GAME OVER');
+    }
+
+    function updateSpaceButton(action, message = '') {
         let playButton = document.querySelector('.pause-label');
         let gameOver = document.querySelector('.game-over');
 
-        clearInterval(interval);
-        playing = false;
-        if (!playing) {
-            playButton.innerHTML = '<span class="pause-label-red">PLAY</span>';
+        if (action === 'PLAY') {
+            action = '<span class="pause-label-red">' + action + '</span>';
         }
-        gameOver.innerHTML = 'GAME OVER';
+
+        playButton.innerHTML = action;
+        gameOver.innerHTML = message;
     }
 
     function newGame() {
-        let playButton = document.querySelector('.pause-label');
-        let gameOver = document.querySelector('.game-over');
-        
+        updateSpaceButton('PAUSE');
         nextShape = newShape(shapes);
         playing = true;
-        if (playing) {
-            playButton.innerHTML = 'PAUSE';
-        }
-        gameOver.innerHTML = '';
         pause = false;
         score = -10;
         rows = 0;
@@ -437,6 +441,13 @@
         releaseShape();
         setInterval(renderCanvas, 20);
     }
+
+    // let Score = (function (){
+    //     let score;
+    //     let bestScore;
+    //     let rows;
+    //     let speed;
+    // })();
 
     controlButtons();
 }());
