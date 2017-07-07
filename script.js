@@ -1,12 +1,10 @@
-(function () {
+(function (Score) {
     'use strict';
 
     const ctx = document.getElementById('canvas-tetris').getContext('2d');
     const COLS = 10, ROWS = 20;
     const WIDTH = 300, HEIGHT = 600;
     let playing = false;
-    let score, rows, bestScore = 0;
-    let speed;
     let canvas = [];
     let interval;
     let pause;
@@ -14,6 +12,7 @@
     let shapeSize;
     let shapeColor;
     let positionX, positionY;
+
     let shapes = [
         {
             name: 'I-shape',
@@ -78,8 +77,8 @@
         let shape = shapes[Math.floor(Math.random() * shapes.length)];
         let shapeSize_ = shape.size;
         let shapeColor_ = shape.color;
-
         let currentShape_ = [];
+
         for (let y = 0; y < shapeSize_; y += 1) {
             currentShape_[y] = [];
             for (let x = 0; x < shapeSize_; x += 1) {
@@ -91,6 +90,7 @@
 
         let positionX_ = Math.floor(Math.random() * COLS);
         let positionY_ = 0;
+        
         for (let x = 0; x < shapeSize_; x += 1) {
             for (let y = 0; y < shapeSize_; y += 1) {
                 if (currentShape_[y][x] && (x + positionX_ >= 10)) {
@@ -267,14 +267,10 @@
                     }
                 }
                 y += 1;
-                score += 100;
-                rows += 1;
+                Score.increaseScore(100, 1, 10)
                 updateScoreFields();
-                if (speed > 200) {
-                    speed -= 10;
-                }
                 clearInterval(interval);
-                interval = setInterval(moveShape, speed)
+                interval = setInterval(moveShape, Score.getSpeed())
             }
         }
     }
@@ -370,7 +366,7 @@
 
     function gamePause() {
         if (pause) {
-            interval = setInterval(moveShape, speed);
+            interval = setInterval(moveShape, Score.getSpeed());
             pause = false;
         } else {
             clearInterval(interval);
@@ -383,17 +379,15 @@
         let rowsField = document.querySelector('.score-rows');
         let bestScoreField = document.querySelector('.best-score-count');
 
-        scoreField.innerHTML = score;
-        rowsField.innerHTML = 'ROWS: ' + rows;
-        if (score > bestScore) {
-            bestScore = score;
-        }
-        bestScoreField.innerHTML = bestScore;
+        scoreField.innerHTML = Score.getScore();
+        rowsField.innerHTML = 'ROWS: ' + Score.getRows();
+        Score.setBestScore();
+        bestScoreField.innerHTML = Score.getBestScore();
     }
 
     function releaseShape() {
         if (playing) {
-            score += 10;
+            Score.increaseScore(10);
             setNextShape();
             renderNextShape(nextShape.currentShape, nextShape.shapeSize, nextShape.shapeColor);
             updateScoreFields();
@@ -432,22 +426,15 @@
         nextShape = newShape(shapes);
         playing = true;
         pause = false;
-        score = -10;
-        rows = 0;
-        speed = 500;
+        Score.setScore(-10);
+        Score.setRows(0);
+        Score.setSpeed(500);
         clearCanvas();
         clearInterval(interval);
-        interval = setInterval(moveShape, speed);
+        interval = setInterval(moveShape, Score.getSpeed());
         releaseShape();
         setInterval(renderCanvas, 20);
     }
 
-    // let Score = (function (){
-    //     let score;
-    //     let bestScore;
-    //     let rows;
-    //     let speed;
-    // })();
-
     controlButtons();
-}());
+}(Score));
