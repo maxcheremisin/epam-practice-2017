@@ -1,10 +1,10 @@
 let Score = (function() {
     'use strict';
     
-    let score;
+    let score = 0;
     let bestScore = 0;
-    let rows;
-    let speed;
+    let lines = 0;
+    let speed = 500;
 
     function setScore(score_) {
         score = score_;
@@ -15,21 +15,19 @@ let Score = (function() {
     }
 
     function setBestScore() {
-        if (score > bestScore) {
-            bestScore = score;
-        }
+        bestScore = score > bestScore ? score : bestScore;
     }
 
     function getBestScore() {
         return bestScore;
     }
 
-    function setRows(rows_) {
-        rows = rows_;
+    function setLines(lines_) {
+        lines = lines_;
     }
 
-    function getRows() {
-        return rows;
+    function getLines() {
+        return lines;
     }
 
     function setSpeed(speed_) {
@@ -40,12 +38,10 @@ let Score = (function() {
         return speed;
     }
 
-    function increaseScore(score_ = 0, rows_ = 0, speed_ = 0) {
+    function increaseScore(score_ = 0, lines_ = 0, speed_ = 0) {
         score += score_;
-        rows += rows_;
-        if (speed > 200) {
-            speed -= speed_;
-        }
+        lines += lines_;
+        speed = speed > 200 ? speed -= speed_ : speed;
     }
 
     return {
@@ -53,11 +49,11 @@ let Score = (function() {
         getScore: getScore,
         setBestScore: setBestScore,
         getBestScore: getBestScore,
-        setRows: setRows,
-        getRows: getRows,
+        setLines: setLines,
+        getLines: getLines,
         setSpeed: setSpeed,
         getSpeed: getSpeed,
         increaseScore: increaseScore
-    }
+    };
 
 })();
